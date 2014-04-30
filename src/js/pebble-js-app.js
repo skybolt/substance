@@ -1,7 +1,7 @@
 //  file: pebble-js-app.js
 //  auth: Matthew Clark, SetPebble
-
 //var setPebbleToken = 'C45W'; //theirs
+
 var setPebbleToken = '2TU4'; //mine
 console.log("substance, setpebble token " + setPebbleToken + " for app v. 1.3.x"); 
 console.log("request.open( http://x.SetPebble.com/api/" + setPebbleToken + '/' + Pebble.getAccountToken());

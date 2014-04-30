@@ -1,59 +1,59 @@
 {
-    "versionLabel": "1.3.1",
-    "watchapp": {
-        "watchface": true
-    },
-    "appKeys": {
-        "day": 3,
-        "screen": 1,
-        "vibrate": 6,
-        "action": 0,
-        "position": 5,
-        "date": 2,
-        "seconds": 4
-    },
+    "companyName": "the Klebeian Group",
     "longName": "substance",
-    "shortName": "substance",
+    "uuid": "0a8c3634-2787-49f7-a5b1-7dba20d7abc7",
     "capabilities": [
         "configurable"
     ],
-    "companyName": "the Klebeian Group",
+    "versionLabel": "1.3.1",
+    "appKeys": {
+        "seconds": 4,
+        "date": 2,
+        "position": 5,
+        "action": 0,
+        "screen": 1,
+        "day": 3,
+        "vibrate": 6
+    },
+    "watchapp": {
+        "watchface": true
+    },
+    "versionCode": 1,
     "resources": {
         "media": [
             {
                 "file": "fonts/new_alphabet.ttf",
+                "name": "FONT_NEW_ALPHABET_44",
                 "characterRegex": "[0-9a-zA-Z. :]",
-                "type": "font",
-                "name": "FONT_NEW_ALPHABET_44"
+                "type": "font"
             },
             {
                 "file": "fonts/new_alphabet.ttf",
+                "name": "FONT_NEW_ALPHABET_86",
                 "characterRegex": "[0-9a-zA-Z. :]",
-                "type": "font",
-                "name": "FONT_NEW_ALPHABET_86"
+                "type": "font"
             },
             {
+                "file": "fonts/new_alphabet.ttf",
                 "trackingAdjust": 4,
-                "file": "fonts/new_alphabet.ttf",
+                "name": "FONT_NEW_ALPHABET_26",
                 "characterRegex": "[0-9a-zA-Z. :]",
-                "type": "font",
-                "name": "FONT_NEW_ALPHABET_26"
+                "type": "font"
             },
             {
+                "file": "fonts/new_alphabet.ttf",
                 "trackingAdjust": 3,
-                "file": "fonts/new_alphabet.ttf",
+                "name": "FONT_NEW_ALPHABET_28",
                 "characterRegex": "[0-9a-zA-Z. :]",
-                "type": "font",
-                "name": "FONT_NEW_ALPHABET_28"
+                "type": "font"
             },
             {
-                "menuIcon": true,
                 "file": "images/menu_icon_simplicity.png",
-                "type": "png",
-                "name": "IMAGE_MENU_ICON"
+                "menuIcon": true,
+                "name": "IMAGE_MENU_ICON",
+                "type": "png"
             }
         ]
     },
-    "versionCode": 1,
-    "uuid": "0a8c3634-2787-49f7-a5b1-7dba20d7abc7"
+    "shortName": "substance"
 }

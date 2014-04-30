@@ -44,6 +44,8 @@ static TextLayer* read_day_layer;
 TextLayer *bt_layer; 
 TextLayer *bt_border_layer; 
 uint32_t sunInt; 
+int countDown = 0;
+int fontCount = 0; 
 
 //static Bitmap
 Layer* line_layer;
@@ -56,10 +58,10 @@ Layer* seconds_layer;
 static InverterLayer* inverter_layer;
 
 
-static char time_text[] = "00.00", date_text[] = "Xxxxxxxxxxxxxxxxxxxxxxx 00", day_text[] = "Xuuuuuann";
+static char time_text[] = "00.00", date_text[]	= "Xxxxxxxxxxxxxxxxxxxxxxx 00", day_text[] = "Xuuuuuann";
 static enum SettingScreen { screen_white		= 0, screen_black, screen_follow, screen_count } screen;
 static enum SettingDate { date_month_day 		= 0, date_day_month, date_count } date;
-static enum SettingDay  { day_show 				= 0, day_hide, day_count } day;
+static enum SettingDay  { day_show 			= 0, day_hide, day_count } day;
 static enum SettingSeconds { seconds_hide 		= 0, seconds_show, seconds_count} seconds; 
 static enum SettingDayPosition {position_high 	= 0, position_low, position_count } position; 
 static enum SettingVibrate { vibrate_none 		= 0, vibrate_bt, vibrate_count } vibrate;
@@ -87,13 +89,6 @@ void black_layer_update_callback(Layer *layer, GContext* ctx) {
 	graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
 }
 
-//void accel_tap_handler(AccelData *accel_data, uint32_t num_samples) {	
-
-void accel_tap_handler(AccelAxisType axis, int32_t direction) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "accl press received"); 
-//    text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_CONDENSED_21)));
-//	text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_BOLD_SUBSET_49)));
-}
 
 static void handle_battery(BatteryChargeState charge_state) {
 	int xPos = charge_state.charge_percent; 
@@ -147,8 +142,8 @@ void setScreenInversion(int screen) {
 	}
 }
 
-void display_time(struct tm* pbltime) {
 
+void display_time(struct tm* pbltime) {
 	time_t now;
 //  if (pbltime == NULL) {
     now = time(NULL);
@@ -171,43 +166,18 @@ void display_time(struct tm* pbltime) {
 
 	strftime(time_text, sizeof(time_text), clock_is_24h_style() ? "%H.%M" : "%I.%M", pbltime);
   //  Kludge to handle lack of non-padded hour format string for twelve hour clock.
-  if (!clock_is_24h_style() && (time_text[0] == '0'))
-	  memmove(time_text, &time_text[1], sizeof(time_text) - 1);
+  if (!clock_is_24h_style() && (time_text[0] == '0')) memmove(time_text, &time_text[1], sizeof(time_text) - 1);
 	text_layer_set_text(text_time_layer, time_text);
 	
-	layer_set_hidden(text_layer_get_layer(text_day_layer), day); 
-	layer_set_hidden(text_layer_get_layer(read_day_layer), day); 
-	layer_set_hidden(seconds_layer, seconds); 
+	layer_set_hidden(text_layer_get_layer(text_day_layer), day);
+	layer_set_hidden(text_layer_get_layer(read_day_layer), true);
+	layer_set_hidden(seconds_layer, seconds);
 
 	int xPos = now % 60; 
 	xPos = (144 * xPos) / 60; 
 	layer_set_frame(seconds_layer, GRect(xPos, 97, 3, 2));
 	layer_set_update_proc(seconds_layer, seconds_layer_update_callback); 
-	
-/*	if (screen == screen_follow) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "screen == screen_follow"); 
-	
-	if (sunInt <= 6) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden true, black, sunInt %lu <= 6", sunInt);	
-			//night_flag = 1; 
-			layer_set_hidden(inverter_layer_get_layer(inverter_layer), true); 
-
-	} else if (sunInt >= 19) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden true, black: sunInt %lu >= 19", sunInt);			
-			//night_flag = 1; 
-			layer_set_hidden(inverter_layer_get_layer(inverter_layer), true); 
-	} else {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden false, white, 7 <= sunInt %lu >= 19", sunInt);			
-	//night_flag = 0; 
-	layer_set_hidden(inverter_layer_get_layer(inverter_layer), false); 
-
-	} 
-	} else {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "screen != screen_follow");
-	}   */
 }
-
-
 
 static void tuple_changed_callback(const uint32_t key, const Tuple* tuple_new, const Tuple* tuple_old, void* context) {
 
@@ -219,29 +189,7 @@ static void tuple_changed_callback(const uint32_t key, const Tuple* tuple_new, c
 			screen = value;	
 			//APP_LOG(APP_LOG_LEVEL_DEBUG, "case SETTING_SCREEN_KEY, = %d, 0 = white (inverter showing), 1 = black (inverter hidden), 2 = follow sun (set in display_time)", screen); 
 			persist_write_int(SCREEN_PKEY, screen);
-			setScreenInversion(screen); 
-			
-		/*	if (screen == screen_black) {
-			layer_set_hidden(inverter_layer_get_layer(inverter_layer), screen);
-			} else if (screen == screen_white) {
-			layer_set_hidden(inverter_layer_get_layer(inverter_layer), screen);
-			} else if (screen == screen_follow) {
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "screen == screen_follow");
-				sunInt = getSunInt();
-				if (sunInt <= 6) {
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden true, black, sunInt %lu <= 6", sunInt);
-					layer_set_hidden(inverter_layer_get_layer(inverter_layer), true); 
-				} else if (sunInt >= 19) {
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden true, black: sunInt %lu >= 19", sunInt);
-					layer_set_hidden(inverter_layer_get_layer(inverter_layer), true); 
-				} else {
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "inverter hidden false, white, 7 <= sunInt %lu >= 19", sunInt);
-					layer_set_hidden(inverter_layer_get_layer(inverter_layer), false);
-				}
-			} */
-			//GRect rect = layer_get_frame(inverter_layer_get_layer(inverter_layer));
-			//rect.origin.x = (screen == screen_black) ? 144 : 0;
-			//layer_set_frame(inverter_layer_get_layer(inverter_layer), rect);
+			setScreenInversion(screen);
 		}
 		break;
 
@@ -272,12 +220,12 @@ static void tuple_changed_callback(const uint32_t key, const Tuple* tuple_new, c
 				//APP_LOG(APP_LOG_LEVEL_DEBUG, "position set to position_high"); 
 //				layer_set_bounds(text_layer_get_layer(text_day_layer), GRect(9, 44, 204-7, 168));
 				layer_set_frame(text_layer_get_layer(text_day_layer), GRect(9, 44, 204-7, 168));
-				layer_set_frame(text_layer_get_layer(read_day_layer), GRect(9, 44, 204-7, 168));
+				layer_set_frame(text_layer_get_layer(read_day_layer), GRect(9, 58, 204-7, 168));
 			} else if (position == position_low) {
 				//APP_LOG(APP_LOG_LEVEL_DEBUG, "position set to position_low"); 
 //				layer_set_bounds(text_layer_get_layer(text_day_layer), GRect(9, 148, 204-7, 168));
 				layer_set_frame(text_layer_get_layer(text_day_layer), GRect(7, 136, 204-7, 168));
-				layer_set_frame(text_layer_get_layer(read_day_layer), GRect(7, 136, 204-7, 168));
+				layer_set_frame(text_layer_get_layer(read_day_layer), GRect(7, 150, 204-7, 168));
 			}
 			display_time(NULL); 
 		}
@@ -313,27 +261,9 @@ static void tuple_changed_callback(const uint32_t key, const Tuple* tuple_new, c
 			//APP_LOG(APP_LOG_LEVEL_DEBUG, "case SETTING_SECONDS_KEY, = %d, ZERO is NO (seconds hidden) ONE is YES (seconds show)", seconds); 
 			seconds = value;
 			display_time(NULL);
-		}
+		}			
+		break;
 		
-		
-		/*	if ((value >= 0) && (value < vibrate_count) && (vibrate != value)) {
-			seconds = value;		
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "case SETTING_SECONDS_KEY, = %d, ZERO is NO (seconds hidden) ONE is YES (seconds show)", seconds); 
-			persist_write_int(SCREEN_PKEY, seconds);
-			//GRect rect = layer_get_frame(seconds_layer);
-			//rect.origin.x = (seconds == seconds_hide) ? 144 : 0;
-			bool hide = (seconds == seconds_hide) ? true : false; 
-			layer_set_hidden(seconds_layer, hide); */
-			//layer_set_frame(seconds_layer, rect);
-				
-				
-				
-			/*persist_write_int(SECONDS_PKEY, value);
-				seconds = value; 
-				layer_set_hidden(seconds_layer, true); 
-				display_time(NULL); */
-			
-		break; 
   } //end switchKey
 } //end function
 
@@ -342,7 +272,18 @@ static void app_error_callback(DictionaryResult dict_error, AppMessageResult app
 }
 
 static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
+//	if (countDown > 0) {
+//		countDown = countDown - 1;
+//		fontCount = 1; 
+//	} else {
 	display_time(tick_time);
+//		if (fontCount == 1) {
+//			text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
+//			text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
+//			text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
+//			fontCount = 0; 
+//		}
+//	}
 	//seconds_ticker_update(); 
 //	if ((vibrate == vibrate_hourly) && (units_changed & HOUR_UNIT))
 //    vibes_short_pulse();
@@ -350,17 +291,61 @@ static void handle_tick(struct tm* tick_time, TimeUnits units_changed) {
 
 void read_persist(void) {
 	//const int
-	screen	 	= (persist_exists(SCREEN_PKEY)) ? persist_read_int(SCREEN_PKEY)  : SCREEN_DEFAULT;	
-	date	 	= (persist_exists(DATE_SETTING_PKEY)) ? persist_read_int(DATE_SETTING_PKEY)  : DATE_SETTING_DEFAULT;
-	day			= (persist_exists(DAY_SETTING_PKEY)) ? 	persist_read_int(DAY_SETTING_PKEY)  : DAY_SETTING_DEFAULT;
-	seconds		= (persist_exists(SECONDS_PKEY))	?	persist_read_int(SECONDS_PKEY)		:	SECONDS_DEFAULT; 
-	vibrate	 	= (persist_exists(VIBRATE_PKEY)) ? persist_read_int(VIBRATE_PKEY)  : VIBRATE_DEFAULT;
+	screen	 	= (persist_exists(SCREEN_PKEY)) 		? 	persist_read_int(SCREEN_PKEY)			: 	SCREEN_DEFAULT;	
+	date	 		= (persist_exists(DATE_SETTING_PKEY)) 	? 	persist_read_int(DATE_SETTING_PKEY)	: 	DATE_SETTING_DEFAULT;
+	day			= (persist_exists(DAY_SETTING_PKEY))	? 	persist_read_int(DAY_SETTING_PKEY)		: 	DAY_SETTING_DEFAULT;
+	seconds		= (persist_exists(SECONDS_PKEY))		?	persist_read_int(SECONDS_PKEY)		:	SECONDS_DEFAULT; 
+	vibrate	 	= (persist_exists(VIBRATE_PKEY)) 		? 	persist_read_int(VIBRATE_PKEY)  		: 	VIBRATE_DEFAULT;
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "read VIBRATE_PKEY %d", vibrate); 
-	position	= (persist_exists(DAY_POSITION_PKEY)) ? persist_read_int(DAY_POSITION_PKEY) : DAY_POSITION_DEFAULT; 
+	position	= (persist_exists(DAY_POSITION_PKEY)) 		? 	persist_read_int(DAY_POSITION_PKEY)	: 	DAY_POSITION_DEFAULT; 
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "vibrate key was read, is %d", vibrate); 
 
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "reading screen %d from SCREEN_PKEY", screen); 
 	//oldSunriseInt	= sunriseInt;
+}
+
+void accel_tap_handler(AccelAxisType axis, int32_t direction) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "accl press received"); 
+	layer_set_hidden(text_layer_get_layer(read_day_layer), 0);
+	layer_set_hidden(text_layer_get_layer(text_day_layer), 1);
+//	FONT_KEY_BITHAM_30_BLACK 
+//	FONT_KEY_BITHAM_42_BOLD
+//	FONT_KEY_BITHAM_42_LIGHT
+	APP_LOG(APP_LOG_LEVEL_INFO, "change fonts to BITHAM");
+	text_layer_set_font(text_time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+	text_layer_set_font(text_date_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+	text_layer_set_font(text_day_layer, fonts_get_system_font(FONT_KEY_BITHAM_30_BLACK));
+	layer_get_frame(text_layer_get_layer(text_time_layer));
+	APP_LOG(APP_LOG_LEVEL_INFO, "call display time");
+	display_time(NULL);
+	
+//	int x; 
+//	for ( x = 0; x < 10; x++ ) {
+//	APP_LOG(APP_LOG_LEVEL_DEBUG, "for loop iteration %d", x);
+		//sleep(1);  there is no fucking sleep or wait function
+		//wait(1);
+//	}
+	
+	time_t now;
+	now = time(NULL);
+	uint32_t nowInt = now; 
+	uint32_t thenInt = nowInt + 2;
+//	int y = 0; 
+//	while (now < now + 3) {
+	APP_LOG(APP_LOG_LEVEL_INFO, "Put move down logic here");
+	while (nowInt < thenInt) {
+		now = time(NULL);
+		nowInt = now;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "while condition %lu less than %lu", nowInt, thenInt);
+	}
+	APP_LOG(APP_LOG_LEVEL_INFO, "reset fonts back to NEW_ALPHA");
+	text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
+	text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
+	text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
+//
+	//clockFrame.origin.x = clockFrame.origin.x + (upButtonPressed ? 1 : -1);
+	//in static GRect clockFrame = {.origin = {.x = 29, .y = 54}, .size = {.w = 144-40, .h = 168-54}};
+	//countDown = 2; 
 }
 
 void handle_init(void) {
@@ -416,7 +401,7 @@ void handle_init(void) {
 	text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
 	text_layer_set_font(read_day_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD)); 
 	layer_add_child(root_layer, text_layer_get_layer(text_day_layer));
-	layer_add_child(root_layer, text_layer_get_layer(read_day_layer));
+	//layer_add_child(root_layer, text_layer_get_layer(read_day_layer));
 	
 
 	GRect line_frame = GRect(8, 97, 139, 2);
@@ -461,17 +446,16 @@ void handle_init(void) {
 	layer_add_child(window_get_root_layer(window), inverter_layer_get_layer(inverter_layer));
 
 	Tuplet tuples[] = {
-    TupletInteger(SETTING_SCREEN_KEY, screen),
-    TupletInteger(SETTING_DATE_KEY, date),
+	TupletInteger(SETTING_SCREEN_KEY, screen),
+	TupletInteger(SETTING_DATE_KEY, date),
 	TupletInteger(SETTING_DAY_KEY, day),
 	TupletInteger(SETTING_DAY_POSITION_KEY, position), 
-    TupletInteger(SETTING_VIBRATE_KEY, vibrate),
+	TupletInteger(SETTING_VIBRATE_KEY, vibrate),
 	TupletInteger(SETTING_SECONDS_KEY, seconds),
   };
 
 	layer_set_hidden(text_layer_get_layer(bt_layer), true); 
 	layer_set_hidden(text_layer_get_layer(bt_border_layer), true); 
-	
 	app_message_open(160, 160);
 	
 	if (vibrate == vibrate_bt) {
@@ -496,7 +480,6 @@ void handle_init(void) {
 
 	display_time(NULL);
 	tick_timer_service_subscribe(SECOND_UNIT, handle_tick);
-	//accel_data_service_subscribe(0, accel_tap_handler);	
 	accel_tap_service_subscribe(accel_tap_handler); 
 	battery_state_service_subscribe(handle_battery); 
 

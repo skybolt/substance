@@ -12,6 +12,7 @@ void handle_bluetooth(bool connected) {
 
 void bluetooth_init(bool connected) {
 	layer_set_hidden(text_layer_get_layer(bt_layer), connected ? true : false);
+	layer_set_hidden(text_layer_get_layer(bt_border_layer), connected ? true : false);
 }
 
 void bluetooth_deinit(void) {

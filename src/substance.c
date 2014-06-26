@@ -34,8 +34,8 @@ enum Settings {
 };
 
 
-const char* kDateFormat[] = { "%b %d :%S", "%e %B :%S" };
-//const char* kDateFormat[] = { "%b %d", "%d %B" };
+//const char* kDateFormat[] = { "%b %d :%S", "%e %B :%S" };
+const char* kDateFormat[] = { "%b %d", "%d %B" };
 
 //  variables
 static Window* window;
@@ -100,13 +100,14 @@ static void handle_battery(BatteryChargeState charge_state) {
 	layer_set_update_proc(power_bar_layer, black_layer_update_callback); 
 
 	if (charge_state.is_charging) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "charge_state.is_charging");
-        layer_set_hidden(top_line_layer, false);
-        layer_set_hidden(bottom_line_layer, false);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "charge_state.is_charging, battery %i", charge_state.charge_percent);
+		layer_set_hidden(top_line_layer, false);
+		layer_set_hidden(bottom_line_layer, false);
 	} else {
+		
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "battery not charging, battery %i", charge_state.charge_percent); 
 		layer_set_hidden(top_line_layer, true);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "battery not charging");
-        layer_set_hidden(bottom_line_layer, true);
+		layer_set_hidden(bottom_line_layer, true);
 	}
 }
 
@@ -146,17 +147,52 @@ void setScreenInversion(int screen) {
 }
 
 void fontSwitch(void) {
+	int time_x = 0; 
+	int time_y = 48;
+	int date_x = 1; 
+	int date_y = 32;
+	int day_x = -1;
+	int day_y = 12; 
 	if (switchFlag == 0) {
-	APP_LOG(APP_LOG_LEVEL_INFO, "switchFlag = %d, change fonts to EASY", switchFlag);
-		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_86))); 
-		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_44)));
-		text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_26)));
+	APP_LOG(APP_LOG_LEVEL_INFO, "switchFlag = %d, change fonts to EASY", switchFlag); /*
+		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_38))); 
+		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_20)));
+		text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ALT_12)));
+		*/
+		text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ORBITRON_LIGHT_13))); 
+		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ORBITRON_BOLD_14)));
+		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ORBITRON_BOLD_42)));
+			
+		GRect time_frame = layer_get_frame(text_layer_get_layer(text_time_layer));
+		GRect date_frame = layer_get_frame(text_layer_get_layer(text_date_layer));
+		GRect day_frame = layer_get_frame(text_layer_get_layer(text_day_layer));
+	time_frame.origin.x = time_frame.origin.x + time_x;
+	time_frame.origin.y = time_frame.origin.y + time_y;
+	date_frame.origin.x = date_frame.origin.x + date_x;
+	date_frame.origin.y = date_frame.origin.y + date_y;
+	day_frame.origin.x = day_frame.origin.x + day_x;
+	day_frame.origin.y = day_frame.origin.y + day_y;
+	layer_set_frame(text_layer_get_layer(text_time_layer), time_frame);
+	layer_set_frame(text_layer_get_layer(text_date_layer), date_frame);
+	layer_set_frame(text_layer_get_layer(text_day_layer), day_frame); 
 		switchFlag = 1; 	
 	} else if (switchFlag == 1) {		
 		APP_LOG(APP_LOG_LEVEL_INFO, "switchFlag = %d, change fonts to DEFAULT", switchFlag);
-		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
-		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
+		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_87)));
+		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_42)));
 		text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
+				GRect time_frame = layer_get_frame(text_layer_get_layer(text_time_layer));
+		GRect date_frame = layer_get_frame(text_layer_get_layer(text_date_layer));
+		GRect day_frame = layer_get_frame(text_layer_get_layer(text_day_layer));
+		time_frame.origin.x = time_frame.origin.x - time_x;
+		time_frame.origin.y = time_frame.origin.y - time_y;
+		date_frame.origin.x = date_frame.origin.x - date_x; 
+		date_frame.origin.y = date_frame.origin.y - date_y;
+		day_frame.origin.x = day_frame.origin.x - day_x;
+		day_frame.origin.y = day_frame.origin.y - day_y;
+		layer_set_frame(text_layer_get_layer(text_time_layer), time_frame);
+		layer_set_frame(text_layer_get_layer(text_date_layer), date_frame);
+		layer_set_frame(text_layer_get_layer(text_day_layer), day_frame); 
 		switchFlag = 0;
 	}
 	
@@ -167,7 +203,7 @@ void accel_tap_handler(AccelAxisType axis, int32_t direction) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "accl press received"); 
 	fontSwitch(); 
 	
-/*	countDown = 5;
+/*	countDown = 8;
 	countdown_routines(); 
 	accel_tap_service_unsubscribe(); 
 	APP_LOG(APP_LOG_LEVEL_INFO, "change fonts to BITHAM");
@@ -186,40 +222,42 @@ void accel_tap_handler(AccelAxisType axis, int32_t direction) {
 	time_frame.origin.x = time_frame.origin.x - 3;
 	time_frame.origin.y = time_frame.origin.y + 46;
 	date_frame.origin.x = date_frame.origin.x - 2;
-	date_frame.origin.y = date_frame.origin.y + 16;
-	day_frame.origin.x = day_frame.origin.x - 3;
-	day_frame.origin.y = day_frame.origin.y + 8;
+	date_frame.origin.y = date_frame.origin.y + 32;
+	day_frame.origin.x = day_frame.origin.x - 1;
+	day_frame.origin.y = day_frame.origin.y + 12;
 	layer_set_frame(text_layer_get_layer(text_time_layer), time_frame);
 	layer_set_frame(text_layer_get_layer(text_date_layer), date_frame);
-	layer_set_frame(text_layer_get_layer(text_day_layer), day_frame); */
+	layer_set_frame(text_layer_get_layer(text_day_layer), day_frame);   */
 }
 
 void countdown_routines(void) {
 	
 	if (countDown > 1) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "countDown = %d", countDown);
-	layer_get_frame(text_layer_get_layer(text_time_layer));
+//	layer_get_frame(text_layer_get_layer(text_time_layer));
 	countDown = countDown - 1; 
 		
 	} else if (countDown == 1) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "countDown = %d", countDown);
 		APP_LOG(APP_LOG_LEVEL_INFO, "setting fonts back to NEW_ALPHA");
-		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
-		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
+		text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_87)));
+		text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_42)));
 		text_layer_set_font(text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
-		countDown = countDown - 1;
-/*		GRect time_frame = layer_get_frame(text_layer_get_layer(text_time_layer));
+		countDown = 0;
+		/*
+		GRect time_frame = layer_get_frame(text_layer_get_layer(text_time_layer));
 		GRect date_frame = layer_get_frame(text_layer_get_layer(text_date_layer));
 		GRect day_frame = layer_get_frame(text_layer_get_layer(text_day_layer));
-		time_frame.origin.x = time_frame.origin.x + 3;
+		time_frame.origin.x = time_frame.origin.x + 1;
 		time_frame.origin.y = time_frame.origin.y - 46;
 		date_frame.origin.x = date_frame.origin.x + 2; 
-		date_frame.origin.y = date_frame.origin.y - 16;
+		date_frame.origin.y = date_frame.origin.y - 32;
 		day_frame.origin.x = day_frame.origin.x + 3;
-		day_frame.origin.y = day_frame.origin.y - 8;
+		day_frame.origin.y = day_frame.origin.y - 12;
 		layer_set_frame(text_layer_get_layer(text_time_layer), time_frame);
 		layer_set_frame(text_layer_get_layer(text_date_layer), date_frame);
-		layer_set_frame(text_layer_get_layer(text_day_layer), day_frame); */
+		layer_set_frame(text_layer_get_layer(text_day_layer), day_frame); 
+		*/
 		accel_tap_service_subscribe(accel_tap_handler); 
 	}
 }
@@ -304,11 +342,11 @@ static void tuple_changed_callback(const uint32_t key, const Tuple* tuple_new, c
 		if ((value >= 0) && (value < position_count) && (position != value)) {
 			persist_write_int(DAY_POSITION_PKEY, value); 
 			position = value; 
-			if (debug_flag == 1) {
+			if (debug_flag > -1) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "DAY POSITION KEY %d", position);
 			}
 			if (position == position_high) {
-			if (debug_flag == 1) {
+			if (debug_flag > -1) {
 				APP_LOG(APP_LOG_LEVEL_DEBUG, "position set to position_high"); 
 			}
 //				layer_set_bounds(text_layer_get_layer(text_day_layer), GRect(9, 44, 204-7, 168));
@@ -411,7 +449,6 @@ void handle_init(void) {
 	window_stack_push(window, true);
 	//  default settings
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "before read persist screen %d", screen); 	
-	read_persist(); 
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "after read persist screen %d", screen); 
 	//screen = screen_black;
 	//date = date_month_day;
@@ -432,14 +469,14 @@ void handle_init(void) {
 	text_date_layer = text_layer_create(GRect(8, 47-2, 204-8, 168-68));
 	text_layer_set_text_color(text_date_layer, GColorWhite);
 	text_layer_set_background_color(text_date_layer, GColorClear);
-	text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
+	text_layer_set_font(text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_42)));
 	//text_layer_set_font(text_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
 	layer_add_child(root_layer, text_layer_get_layer(text_date_layer));
 
 	text_time_layer = text_layer_create(GRect(8, 45, 204-7, 168));
 	text_layer_set_text_color(text_time_layer, GColorWhite);
 	text_layer_set_background_color(text_time_layer, GColorClear);
-	text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
+	text_layer_set_font(text_time_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_87)));
 	layer_add_child(root_layer, text_layer_get_layer(text_time_layer));
 
 	if (position == position_high) {
@@ -478,19 +515,22 @@ void handle_init(void) {
 	w=144;
 	h=2; 
 
-	top_line_layer = layer_create(GRect(x+8, y-1, w, h+2));
+	top_line_layer = layer_create(GRect(x+8, y-1, w, 1));
 	layer_set_update_proc(top_line_layer, white_layer_update_callback);
 	
-	bottom_line_layer = layer_create(GRect(0+8, y+2, w, h-1));
+	bottom_line_layer = layer_create(GRect(x+8, y+2, w, 1));
 	layer_set_update_proc(bottom_line_layer, white_layer_update_callback);
 
 	power_bar_layer = layer_create(GRect(x-1, y, 1, h));
 	layer_set_update_proc(power_bar_layer, black_layer_update_callback); 
 	
 	layer_add_child(root_layer, top_line_layer);
-	//layer_add_child(root_layer, bottom_line_layer);
+	layer_add_child(root_layer, bottom_line_layer);
 	layer_add_child(root_layer, power_bar_layer);
 	layer_add_child(root_layer, seconds_layer);
+	
+	layer_set_hidden(top_line_layer, false);
+     layer_set_hidden(bottom_line_layer, false);
 
 	
 	//base color is BLACK BACKGROUND inverter layer turns background WHITE
@@ -500,6 +540,7 @@ void handle_init(void) {
 	setScreenInversion(screen); 
 	layer_add_child(window_get_root_layer(window), inverter_layer_get_layer(inverter_layer));
 
+	read_persist(); 
 	Tuplet tuples[] = {
 	TupletInteger(SETTING_SCREEN_KEY, screen),
 	TupletInteger(SETTING_DATE_KEY, date),
@@ -548,8 +589,8 @@ void handle_init(void) {
 void handle_deinit(void) {	
 	APP_LOG(APP_LOG_LEVEL_INFO, "deinit sequence: substance");
 	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_28)));
-	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_44)));
-	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_86)));
+	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_42)));
+	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_87)));
 	fonts_unload_custom_font(fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_NEW_ALPHABET_26)));
 	tick_timer_service_unsubscribe();
 	inverter_layer_destroy(inverter_layer);	

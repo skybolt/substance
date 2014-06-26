@@ -6,7 +6,7 @@
 #
 
 try:
-    from sh import CommandNotFound, jshint, ErrorReturnCode_2
+    from sh import CommandNotFound, jshint, cat, ErrorReturnCode_2
     hint = jshint
 except (ImportError, CommandNotFound):
     hint = None
@@ -26,9 +26,15 @@ def configure(ctx):
 def build(ctx):
     if False and hint is not None:
         try:
-            hint("src/js/pebble-js-app.js", _tty_out=False) # no tty because there are none in the cloudpebble sandbox.
+            hint([node.abspath() for node in ctx.path.ant_glob("src/**/*.js")], _tty_out=False) # no tty because there are none in the cloudpebble sandbox.
         except ErrorReturnCode_2 as e:
             ctx.fatal("\nJavaScript linting failed (you can disable this in Project Settings):\n" + e.stdout)
+
+    # Concatenate all our JS files (but not recursively), and only if any JS exists in the first place.
+    ctx.path.make_node('src/js/').mkdir()
+    js_paths = [node.abspath() for node in ctx.path.ant_glob("src/*.js")]
+    if js_paths:
+        ctx.exec_command(['cat'] + js_paths, stdout=open('src/js/pebble-js-app.js', 'a'))
 
     ctx.load('pebble_sdk')
 

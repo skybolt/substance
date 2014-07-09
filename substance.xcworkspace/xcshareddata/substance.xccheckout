@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>8BCD311F-D9F3-47A9-BE96-D29D133D6ADE</string>
+	<key>IDESourceControlProjectName</key>
+	<string>substance</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F894A74C-3B26-4D66-86B5-91B6FB8009BB</key>
+		<string>http://www.github.com/skybolt/substance</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>substance.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F894A74C-3B26-4D66-86B5-91B6FB8009BB</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://www.github.com/skybolt/substance</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F894A74C-3B26-4D66-86B5-91B6FB8009BB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F894A74C-3B26-4D66-86B5-91B6FB8009BB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>substance</string>
+		</dict>
+	</array>
+</dict>
+</plist>

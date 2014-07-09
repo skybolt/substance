@@ -1,11 +1,15 @@
 {
-    "capabilities": [
+"capabilities":
+    [
         "configurable"
     ],
-    "shortName": "substance",
-    "longName": "substance",
+"shortName": "substance"
+    ,
+"longName": "substance"
+    ,
     "versionCode": 1,
-    "appKeys": {
+"appKeys":
+    {
         "position": 5,
         "date": 2,
         "action": 0,
@@ -14,82 +18,89 @@
         "day": 3,
         "screen": 1
     },
-    "uuid": "0a8c3634-2787-49f7-a5b1-7dba20d7abc7",
-    "companyName": "the Klebeian Group",
-    "versionLabel": "1.3.1",
-    "watchapp": {
-        "watchface": true
+"uuid": "0a8c3634-2787-49f7-a5b1-7dba20d7abc7"
+    ,
+"companyName": "the Klebeian Group"
+    ,
+"versionLabel": "1.3.1"
+    ,
+"watchapp":
+    {
+"watchface":
+        true
     },
-    "resources": {
-        "media": [
-            {
-                "type": "font",
-                "name": "FONT_ORBITRON_BOLD_14",
-                "trackingAdjust": 2,
-                "file": "fonts/Orbitron Bold.ttf"
-            },
-            {
-                "type": "font",
-                "name": "FONT_ORBITRON_BOLD_42",
-                "file": "fonts/Orbitron Bold.ttf"
-            },
-            {
-                "type": "font",
-                "name": "FONT_ORBITRON_LIGHT_13",
-                "trackingAdjust": 6,
-                "file": "fonts/Orbitron Light.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_ALT_38",
-                "file": "fonts/Neu-Alphabet-Improved.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_ALT_20",
-                "file": "fonts/Neu-Alphabet-Improved.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_ALT_12",
-                "trackingAdjust": 4,
-                "file": "fonts/Neu-Alphabet-Improved.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_NEW_ALPHABET_26",
-                "trackingAdjust": 4,
-                "file": "fonts/new_alphabet.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_NEW_ALPHABET_28",
-                "file": "fonts/new_alphabet.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_NEW_ALPHABET_42",
-                "file": "fonts/new_alphabet.ttf"
-            },
-            {
-                "type": "font",
-                "characterRegex": "[0-9a-zA-Z. :]",
-                "name": "FONT_NEW_ALPHABET_87",
-                "trackingAdjust": -1,
-                "file": "fonts/new_alphabet.ttf"
-            },
-            {
-                "type": "png",
-                "menuIcon": true,
-                "name": "IMAGE_MENU_ICON",
-                "file": "images/menu_icon_simplicity.png"
-            }
+"resources":
+    {
+"media":
+        [
+        {
+"type": "font",
+"name": "FONT_ORBITRON_BOLD_14",
+            "trackingAdjust": 2,
+"file": "fonts/Orbitron Bold.ttf"
+        },
+        {
+"type": "font",
+"name": "FONT_ORBITRON_BOLD_42",
+"file": "fonts/Orbitron Bold.ttf"
+        },
+        {
+"type": "font",
+"name": "FONT_ORBITRON_LIGHT_13",
+            "trackingAdjust": 6,
+"file": "fonts/Orbitron Light.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_ALT_38",
+"file": "fonts/Neu-Alphabet-Improved.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_ALT_20",
+"file": "fonts/Neu-Alphabet-Improved.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_ALT_12",
+            "trackingAdjust": 4,
+"file": "fonts/Neu-Alphabet-Improved.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_NEW_ALPHABET_26",
+            "trackingAdjust": 4,
+"file": "fonts/new_alphabet.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_NEW_ALPHABET_28",
+"file": "fonts/new_alphabet.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_NEW_ALPHABET_42",
+"file": "fonts/new_alphabet.ttf"
+        },
+        {
+"type": "font",
+"characterRegex": "[0-9a-zA-Z. :]",
+"name": "FONT_NEW_ALPHABET_87",
+"trackingAdjust": -1,
+"file": "fonts/new_alphabet.ttf"
+        },
+        {
+"type": "png",
+"menuIcon": true,
+"name": "IMAGE_MENU_ICON",
+"file": "images/menu_icon_simplicity.png"
+        }
         ]
     }
 }

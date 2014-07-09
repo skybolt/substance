@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:README.md">
+   </FileRef>
+   <Group
+      location = "group:resources"
+      name = "resources">
+      <Group
+         location = "group:fonts"
+         name = "fonts">
+         <FileRef
+            location = "group:Neu-Alphabet-Improved.ttf">
+         </FileRef>
+         <FileRef
+            location = "group:new_alphabet.ttf">
+         </FileRef>
+         <FileRef
+            location = "group:Orbitron Bold.ttf">
+         </FileRef>
+         <FileRef
+            location = "group:Orbitron Light.ttf">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:images"
+         name = "images">
+         <FileRef
+            location = "group:menu_icon_simplicity.png">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "group:src"
+      name = "src">
+      <Group
+         location = "group:js"
+         name = "js">
+         <FileRef
+            location = "group:pebble-js-app.js">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:bluetooth.c">
+      </FileRef>
+      <FileRef
+         location = "group:bluetooth.h">
+      </FileRef>
+      <FileRef
+         location = "group:substance.c">
+      </FileRef>
+      <FileRef
+         location = "group:substance.h">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:appinfo.json">
+   </FileRef>
+   <FileRef
+      location = "group:jshintrc">
+   </FileRef>
+   <FileRef
+      location = "group:wscript">
+   </FileRef>
+</Workspace>
